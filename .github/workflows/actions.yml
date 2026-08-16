@@ -1,27 +1,21 @@
-name: run main.py
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-
       - name: checkout repo content
-        uses: actions/checkout@v3 # checkout the repository content to github runner
-
-      - name: setup python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9' # install the python version needed
-          
-      - name: install python packages
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+        uses: actions/checkout@v4
 
       - name: Setup hugo
         uses: peaceiris/actions-hugo@v2
@@ -30,39 +24,20 @@ jobs:
           extended: true
 
       - name: Build Website
-        run: hugo --minify
+        run: hugo --minify --baseURL "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
 
-      - name: Deploy to Netlify
-        run: netlify deploy --dir=public --message="Auto Deploy" --prod
-        env: 
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
-          NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
-
-      - name: generate PDFs # run main.py
-        env:
-          PDFCO_KEY: ${{ secrets.PDFCO_KEY }}
-          RESUME_URL: ${{ vars.RESUME_URL }}
-        run: |
-          mkdir static_pdf
-          python get_pdf.py
-          cp static_pdf/*.pdf ./static/
-          cp static_pdf/*.pdf ./public/
-
-      - name: Deploy to Netlify
-        run: netlify deploy --dir=public --message="Auto Deploy with PDFs" --prod
-        env: 
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_TOKEN }}
-          NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
-          
-      - name: commit files
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add static
-          git diff-index --quiet HEAD || (git commit -a -m "updated PDFs" --allow-empty)
-          
-      - name: push changes
-        uses: ad-m/github-push-action@v0.6.0
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main 
+          path: ./public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
