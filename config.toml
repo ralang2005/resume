@@ -1,110 +1,139 @@
 # Page settings
 
-baseURL = "https://resume-demo.bas.work/"
+baseURL = "https://ralang2005.github.io/resume/"
 languageCode = "en"
 title = "John Doe"
 enableGitInfo = false
 googleAnalytics = "UA-XXXXXXX-Y"
 
 [params]
-    author = "John Doe"
-    description = "Demo Resume"
+    author = "Ryan Lang"
+    description = "Professional Online Resume"
     og_image = "better-software.png"
-    twitterName = "@bascodes"
-    ghRepo = "https://github.com/codewithbas/resume/"
-    hugoRepo = "https://github.com/gohugoio/hugo/"
+    twitterName = "ralang2005"
+    ghRepo = "https://github.com/ralang2005/resume/"
+    hugoRepo = ""
 
     [params.profile]
         enable = true
-        name = "John Doe"
-        tagline = "Demo Resume"
+        name = "Ryan Lang"
+        tagline = "Professional Online Resume"
         avatar = "bas-steins-2.jpg"
 
     [params.contact]
         enable = true
 
-        location = "Somewhere in the world"
+        location = "Cary, North Carolina"
 
         [[params.contact.list]]
         icon = "fas fa-phone-square"
         url = "tel:"
-        text = "confidential"
+        text = "(917)-535-5264"
         [[params.contact.list]]
         icon = "fas fa-envelope-square"
-        url = "mailto:mail@example.org"
-        text = "mail@example.org"
+        url = "mailto:ralang2005@gmail.com"
+        text = "ralang2005@gmail.com"
         [[params.contact.list]]
         icon = "fas fa-globe"
-        url = "https://bas.bio"
-        text = "My links on the web"
+        url = "TO BE ADDED"
+        text = "Future Links"
 
 
     [params.skills]
         enable = true
 
         [[params.skills.list]]
-        title = "Python"
+        title = "Cross-Departmental Adaptability"
         [[params.skills.list]]
-        title = "Lua"
+        title = "Customer Service"
         [[params.skills.list]]
-        title = "LISP"
-
+        title = "Collaboration & Communication"
+        [[params.skills.list]]
+        title = "Problem Solving & Attention to Detail"
+        [[params.skills.list]]
+        title = "Website Creation & Design"
+        
 
     [params.education]
         enable = true
 
         [[params.education.list]]
-        degree = "Master of Desaster"
-        university = "University of Life"
-        dates = "1990-present"
-
+        degree = "CCP & 3rd YR Student at"
+        university = "Wake Tech Community College"
+        dates = "2022-2026"
+        [[params.education.list]]
+        degree = "Graduated from"
+        university = "Apex High School"
+        dates = "2019-2023"
 
     [params.awards]
         enable = true
 
         [[params.awards.list]]
-        name = "Professional Scrum Master™ I"
-        body = "scrum.org"
-        date = "2018"
+        name = "Microsoft Word 2013 Certification"
+        body = "Microsoft"
+        date = "2019"
+        [[params.awards.list]]
+        name = "Autodesk AutoCAD User Certification"
+        body = "Autodesk"
+        date = "2023"
 
 
     [params.languages]
         enable = true
 
         [[params.languages.list]]
-        name = "Klingon"
+        name = "English"
         level = "Fluent"
 
         [[params.languages.list]]
-        name = "English"
-        level = "Fluent"
+        name = "Spanish"
+        level = "Intermediate"
 
 
     [params.interests]
         enable = true
 
         [[params.interests.list]]
-        name = "Counting Sheeps"
-
+        name = "Web Design & Development"
+        [[params.interests.list]]
+        name = "E-Commerce & Online Retail"
+        [[params.interests.list]]
+        name = "Cameras & Photography"
+        [[params.interests.list]]
+        name = "Music & Musical Theory"
+        [[params.interests.list]]
+        name = "Online Gaming"
 
     [params.summary]
         enable = true
-        text = "I am the 10 eggs developer you are looking for."
+        text = "Business Marketing student at Wake Tech Community College, bringing hands-on retail experience across multiple departments at Academy Sports + Outdoors"
 
 
     [params.experience]
         enable = true
 
         [[params.experience.list]]
+        title = "Flexible Sales Associate"
+        dates = "2024 - Present"
+        company = "Academy Sports + Outdoors"
+        details = "At Academy, I've provided efficient checkout service while supporting customers by answering questions and assisting with front-end needs, and I now contribute as an Apparel Team Member by helping maintain merchandise presentation, stocking inventory, and assisting shoppers on the sales floor."
+        [[params.experience.list]]
+        title = "Graduated Academy of Information & Technology (AOIT) Member"
+        dates = "2019 - 2023"
+        company = "Apex High School"
+        details = "Selected through a competitive lottery based admission process at Apex High School, requiring an application essay prior to enrollment. Completed a specialized curriculum focused on technology and computer science, including coursework in programming and web design, gaining foundational technical skills applied throughout subsequent projects and coursework. "
+        [[params.experience.list]]
         title = "Intern"
-        dates = "2000 - Present"
-        company = "Compuglobal Hyper Mega Net"
-        details = "Increased the baudrate for comic book guy"
-        [[params.experience.list.items]]
-        details = "Took buttery notes"
-
-
-
+        dates = "2023 - 2024"
+        company = "Adapt Marketing"
+        details = "Developed and maintained a pricing organization system via Excel to track and analyze marketing materials. Gained hands-on exposure to marketing operations and the importance of organized data in supporting business decisions."
+        [[params.experience.list]]
+        title = "Online Community Moderator"
+        dates = "2025 - Present"
+        company = "KingdomsMC"
+        details = "Serving as a staff member for a long-running online multiplayer community and contributing to moderation, policy development, and recruitment. I led a comprehensive rewrite of community guidelines, managed a multi-sage application process involving 40+ candidates, and authored recruitment and reference materials to support community growth and engagement."
+        
     [params.projects]
         enable = true
 
