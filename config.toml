@@ -2,7 +2,7 @@
 
 baseURL = "https://ralang2005.github.io/resume/"
 languageCode = "en"
-title = "John Doe"
+title = "Ryan Lang's Online Resume"
 enableGitInfo = false
 googleAnalytics = "UA-XXXXXXX-Y"
 
