@@ -40,6 +40,20 @@ const mimeFor = (ext) => {
       max-width: 100% !important;
       width: 100% !important;
     }
+    @media print and (max-height: 11in) {
+      body {
+        font-size: 0.85em;
+        line-height: 1.3 !important;
+      }
+      h1, h2, h3, h4, h5, h6 {
+        margin: 0.3em 0 !important;
+      }
+      p, li {
+        margin: 0.2em 0 !important;
+      }
+      section, article, .section, .block {
+        margin-bottom: 0.5em !important;
+      }
     .dark-mode-switch {
       display: none !important;
       visibility: hidden !important;
@@ -130,7 +144,7 @@ await page.pdf({
   path: path.join(publicDir, 'resume.letter.pdf'),
   format: 'Letter',
   printBackground: true,
-  margin: { top: '0.3in', bottom: '0.3in', left: '0.4in', right: '0.4in' }
+  margin: { top: '0.25in', bottom: '0.25in', left: '0.35in', right: '0.35in' }
 });
 
   await browser.close();
