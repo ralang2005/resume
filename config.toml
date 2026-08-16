@@ -139,19 +139,19 @@ googleAnalytics = "UA-XXXXXXX-Y"
 
         [[params.projects.list]]
         title = "Landscape & Sky Photography"
-        meta = "Instagram"
+        meta = "Instagram | 2024 - Present"
         url = "https://www.instagram.com/rlang.photos/"
-        tagline = "2024 - Present"
+        tagline = "An evolving collection of landscape and sky photography, focused on composition and natural light."
         [[params.projects.list]]
         title = "Music Analysis & Writing"
-        meta = "Genius"
+        meta = "Genius | 2024 - Present"
         url = "https://genius.com/ralang2005"
-        tagline = "2024 - Present"
+        tagline = "Ongoing analytical writing exploring themes and meaning in contemporary music."
         [[params.projects.list]]
         title = "This Resume"
-        meta = "GitHub Pages"
-        url = "ralang2005.github.io/resume"
-        tagline = "2023 - Present"
+        meta = "GitHub Pages | 2023 - Present"
+        url = ""
+        tagline = "A self-built portfolio site with automated deployment, kept continually up to date."
 
 
     [params.information]
