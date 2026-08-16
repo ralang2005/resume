@@ -107,7 +107,7 @@ googleAnalytics = "UA-XXXXXXX-Y"
 
     [params.summary]
         enable = true
-        text = "Business Marketing student at Wake Tech Community College, bringing hands-on retail experience across multiple departments at Academy Sports + Outdoors"
+        text = "Business Marketing student at Wake Tech Community College, bringing hands-on retail experience across multiple departments at Academy Sports + Outdoors."
 
 
     [params.experience]
@@ -138,10 +138,20 @@ googleAnalytics = "UA-XXXXXXX-Y"
         enable = true
 
         [[params.projects.list]]
+        title = "Landscape & Sky Photography"
+        meta = "Instagram"
+        url = "https://www.instagram.com/rlang.photos/"
+        tagline = "2024 - Present"
+        [[params.projects.list]]
+        title = "Music Analysis & Writing"
+        meta = "Genius"
+        url = "https://genius.com/ralang2005"
+        tagline = "2024 - Present"
+        [[params.projects.list]]
         title = "This Resume"
-        meta = "GitHub project"
-        url = "https://github.com/codewithbas/resume"
-        tagline = "A resume with a free PDF generator"
+        meta = "GitHub Pages"
+        url = "ralang2005.github.io/resume"
+        tagline = "2023 - Present"
 
 
     [params.information]
@@ -163,13 +173,13 @@ googleAnalytics = "UA-XXXXXXX-Y"
 
         [[params.social.list]]
         icon = "fab fa-github-square"
-        url = "https://github.com/codewithbas"
-        title = "/codewithbas"
+        url = "https://github.com/ralang2005"
+        title = "/ralang2005"
         [[params.social.list]]
         icon = "fab fa-linkedin"
-        url = "https://linkedin.com/in/bascodes"
-        title = "/in/bascodes"
+        url = "https://linkedin.com/in/ryan-lang-76abb4334/"
+        title = "/in/ralang2005"
         [[params.social.list]]
-        icon = "fab fa-twitter-square"
-        url = "https://twitter.com/bascodes"
-        title = "@bascodes"
+        icon = "fab fa-instagram-square"
+        url = "https://instagram.com/r.lang05"
+        title = "@r.lang05"
