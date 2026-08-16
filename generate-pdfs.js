@@ -11,12 +11,11 @@ const url = `http://localhost:8080/${repoName}/`;
   const page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 1600 });
 
-  // Use normal screen styling instead of Puppeteer's default print media emulation
   await page.emulateMediaType('screen');
 
   await page.goto(url, { waitUntil: 'networkidle0' });
 
-  // Explicitly wait for every image on the page to finish loading
+  // Wait for all images to finish their initial load
   await page.evaluate(async () => {
     const images = Array.from(document.images);
     await Promise.all(
@@ -26,6 +25,29 @@ const url = `http://localhost:8080/${repoName}/`;
           img.addEventListener('load', resolve);
           img.addEventListener('error', resolve);
         });
+      })
+    );
+  });
+
+  // Inline every image as a base64 data URL, removing any dependency
+  // on the local server still being reachable at print time
+  await page.evaluate(async () => {
+    const images = Array.from(document.images);
+    await Promise.all(
+      images.map(async (img) => {
+        try {
+          const response = await fetch(img.src);
+          const blob = await response.blob();
+          const dataUrl = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onloadend = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+          });
+          img.src = dataUrl;
+        } catch (err) {
+          console.error('Failed to inline image:', img.src, err.message);
+        }
       })
     );
   });
