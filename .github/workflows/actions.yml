@@ -26,6 +26,22 @@ jobs:
       - name: Build Website
         run: hugo --minify --baseURL "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Puppeteer
+        run: npm install puppeteer
+
+      - name: Serve site locally
+        run: |
+          npx serve public -l 8080 &
+          sleep 5
+
+      - name: Generate PDFs
+        run: node generate-pdfs.js
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -41,4 +57,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
