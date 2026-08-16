@@ -54,6 +54,20 @@ const mimeFor = (ext) => {
       margin: 0 !important;
       padding: 0 !important;
     }
+    h1, h2, h3, h4, h5, h6 {
+      page-break-before: avoid !important;
+      page-break-after: avoid !important;
+      break-before: avoid !important;
+      break-after: avoid !important;
+    }
+    section, article, .section, .block {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+    p {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
   `
   });
   const imgSrcs = await page.$$eval('img', (imgs) =>
