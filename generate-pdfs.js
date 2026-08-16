@@ -35,14 +35,26 @@ const mimeFor = (ext) => {
 
   await page.goto(url, { waitUntil: 'networkidle0' });
   await page.addStyleTag({
-    content: `
-      .container, .container-lg, .container-xl, .container-xxl {
-        max-width: 100% !important;
-      }
-      .dark-mode-switch {
-        display: none !important;
-      }
-    `
+  content: `
+    .container, .container-lg, .container-xl, .container-xxl {
+      max-width: 100% !important;
+      width: 100% !important;
+    }
+    .dark-mode-switch {
+      display: none !important;
+      visibility: hidden !important;
+      position: absolute !important;
+      width: 0 !important;
+      height: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+    body, html {
+      width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+  `
   });
   const imgSrcs = await page.$$eval('img', (imgs) =>
     imgs.map((img) => img.getAttribute('src'))
