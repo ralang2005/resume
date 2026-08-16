@@ -87,15 +87,21 @@ const mimeFor = (ext) => {
   // Give the browser a moment to repaint with the new inline image data
   await new Promise((resolve) => setTimeout(resolve, 500));
 
+  // Ensure the public directory exists before writing files to prevent crash
+  if (!fs.existsSync(publicDir)){
+    fs.mkdirSync(publicDir, { recursive: true });
+  }
+
+  // Use absolute paths instead of relative strings
   await page.pdf({
-    path: 'public/resume.a4.pdf',
+    path: path.join(publicDir, 'resume.a4.pdf'),
     format: 'A4',
     printBackground: true,
     margin: { top: '0.4in', bottom: '0.4in', left: '0.4in', right: '0.4in' }
   });
 
   await page.pdf({
-    path: 'public/resume.letter.pdf',
+    path: path.join(publicDir, 'resume.letter.pdf'),
     format: 'Letter',
     printBackground: true,
     margin: { top: '0.4in', bottom: '0.4in', left: '0.4in', right: '0.4in' }
