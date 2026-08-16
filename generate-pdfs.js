@@ -9,7 +9,26 @@ const url = `http://localhost:8080/${repoName}/`;
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
   const page = await browser.newPage();
+  await page.setViewport({ width: 1200, height: 1600 });
+
+  // Use normal screen styling instead of Puppeteer's default print media emulation
+  await page.emulateMediaType('screen');
+
   await page.goto(url, { waitUntil: 'networkidle0' });
+
+  // Explicitly wait for every image on the page to finish loading
+  await page.evaluate(async () => {
+    const images = Array.from(document.images);
+    await Promise.all(
+      images.map((img) => {
+        if (img.complete) return Promise.resolve();
+        return new Promise((resolve) => {
+          img.addEventListener('load', resolve);
+          img.addEventListener('error', resolve);
+        });
+      })
+    );
+  });
 
   await page.pdf({
     path: 'public/resume.a4.pdf',
