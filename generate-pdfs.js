@@ -1,12 +1,15 @@
 const puppeteer = require('puppeteer');
 
+const repoName = process.env.REPO_NAME || '';
+const url = `http://localhost:8080/${repoName}/`;
+
 (async () => {
   const browser = await puppeteer.launch({
     headless: 'new',
     args: ['--no-sandbox', '--disable-setuid-sandbox']
   });
   const page = await browser.newPage();
-  await page.goto('http://localhost:8080', { waitUntil: 'networkidle0' });
+  await page.goto(url, { waitUntil: 'networkidle0' });
 
   await page.pdf({
     path: 'public/resume.a4.pdf',
