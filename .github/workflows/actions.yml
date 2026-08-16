@@ -34,12 +34,19 @@ jobs:
       - name: Install Puppeteer
         run: npm install puppeteer
 
+      - name: Prepare site for PDF rendering
+        run: |
+          mkdir -p pdf-serve/${{ github.event.repository.name }}
+          cp -r public/* pdf-serve/${{ github.event.repository.name }}/
+
       - name: Serve site locally
         run: |
-          npx serve public -l 8080 &
+          npx serve pdf-serve -l 8080 &
           sleep 5
 
       - name: Generate PDFs
+        env:
+          REPO_NAME: ${{ github.event.repository.name }}
         run: node generate-pdfs.js
 
       - name: Upload artifact
