@@ -1,7 +1,28 @@
 const puppeteer = require('puppeteer');
+const fs = require('fs');
+const path = require('path');
 
 const repoName = process.env.REPO_NAME || '';
 const url = `http://localhost:8080/${repoName}/`;
+const publicDir = path.join(__dirname, 'public');
+
+const mimeFor = (ext) => {
+  switch (ext.toLowerCase()) {
+    case '.jpg':
+    case '.jpeg':
+      return 'image/jpeg';
+    case '.png':
+      return 'image/png';
+    case '.gif':
+      return 'image/gif';
+    case '.svg':
+      return 'image/svg+xml';
+    case '.webp':
+      return 'image/webp';
+    default:
+      return 'application/octet-stream';
+  }
+};
 
 (async () => {
   const browser = await puppeteer.launch({
@@ -10,47 +31,52 @@ const url = `http://localhost:8080/${repoName}/`;
   });
   const page = await browser.newPage();
   await page.setViewport({ width: 1200, height: 1600 });
-
   await page.emulateMediaType('screen');
 
   await page.goto(url, { waitUntil: 'networkidle0' });
 
-  // Wait for all images to finish their initial load
-  await page.evaluate(async () => {
-    const images = Array.from(document.images);
-    await Promise.all(
-      images.map((img) => {
-        if (img.complete) return Promise.resolve();
-        return new Promise((resolve) => {
-          img.addEventListener('load', resolve);
-          img.addEventListener('error', resolve);
-        });
-      })
-    );
-  });
+  const imgSrcs = await page.$$eval('img', (imgs) =>
+    imgs.map((img) => img.getAttribute('src'))
+  );
+  console.log('Found image src attributes:', imgSrcs);
 
-  // Inline every image as a base64 data URL, removing any dependency
-  // on the local server still being reachable at print time
-  await page.evaluate(async () => {
-    const images = Array.from(document.images);
-    await Promise.all(
-      images.map(async (img) => {
-        try {
-          const response = await fetch(img.src);
-          const blob = await response.blob();
-          const dataUrl = await new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.onerror = reject;
-            reader.readAsDataURL(blob);
+  for (const src of imgSrcs) {
+    if (!src) continue;
+
+    let relPath = src;
+    const prefix = `/${repoName}/`;
+    if (repoName && relPath.startsWith(prefix)) {
+      relPath = relPath.slice(prefix.length);
+    } else if (relPath.startsWith('/')) {
+      relPath = relPath.slice(1);
+    }
+
+    const filePath = path.join(publicDir, relPath);
+
+    if (fs.existsSync(filePath)) {
+      const data = fs.readFileSync(filePath);
+      const mime = mimeFor(path.extname(filePath));
+      const dataUri = `data:${mime};base64,${data.toString('base64')}`;
+
+      await page.evaluate(
+        (oldSrc, newSrc) => {
+          document.querySelectorAll('img').forEach((img) => {
+            if (img.getAttribute('src') === oldSrc) {
+              img.src = newSrc;
+            }
           });
-          img.src = dataUrl;
-        } catch (err) {
-          console.error('Failed to inline image:', img.src, err.message);
-        }
-      })
-    );
-  });
+        },
+        src,
+        dataUri
+      );
+      console.log('Inlined image from disk:', filePath);
+    } else {
+      console.error('Image file NOT found on disk at expected path:', filePath);
+    }
+  }
+
+  // Give the browser a moment to repaint with the new inline image data
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   await page.pdf({
     path: 'public/resume.a4.pdf',
