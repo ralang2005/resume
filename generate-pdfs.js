@@ -120,18 +120,18 @@ const mimeFor = (ext) => {
 
   // Use absolute paths instead of relative strings
   await page.pdf({
-    path: path.join(publicDir, 'resume.a4.pdf'),
-    format: 'A4',
-    printBackground: true,
-    margin: { top: '0.4in', bottom: '0.4in', left: '0.4in', right: '0.4in' }
-  });
+  path: path.join(publicDir, 'resume.a4.pdf'),
+  format: 'A4',
+  printBackground: true,
+  margin: { top: '0.4in', bottom: '0.4in', left: '0.4in', right: '0.4in' }
+});
 
-  await page.pdf({
-    path: path.join(publicDir, 'resume.letter.pdf'),
-    format: 'Letter',
-    printBackground: true,
-    margin: { top: '0.4in', bottom: '0.4in', left: '0.4in', right: '0.4in' }
-  });
+await page.pdf({
+  path: path.join(publicDir, 'resume.letter.pdf'),
+  format: 'Letter',
+  printBackground: true,
+  margin: { top: '0.3in', bottom: '0.3in', left: '0.4in', right: '0.4in' }
+});
 
   await browser.close();
   console.log('PDFs generated successfully');
