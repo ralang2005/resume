@@ -18,7 +18,7 @@ googleAnalytics = "UA-XXXXXXX-Y"
         enable = true
         name = "Ryan Lang"
         tagline = "Professional Online Resume"
-        avatar = "bas-steins-2.jpg"
+        avatar = "ryan-photo.jpg"
 
     [params.contact]
         enable = true
