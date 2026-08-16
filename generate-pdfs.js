@@ -34,7 +34,16 @@ const mimeFor = (ext) => {
   await page.emulateMediaType('screen');
 
   await page.goto(url, { waitUntil: 'networkidle0' });
-
+  await page.addStyleTag({
+    content: `
+      .container, .container-lg, .container-xl, .container-xxl {
+        max-width: 100% !important;
+      }
+      .dark-mode-switch {
+        display: none !important;
+      }
+    `
+  });
   const imgSrcs = await page.$$eval('img', (imgs) =>
     imgs.map((img) => img.getAttribute('src'))
   );
