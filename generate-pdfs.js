@@ -6,6 +6,12 @@ const repoName = process.env.REPO_NAME || '';
 const url = `http://localhost:8080/${repoName}/`;
 const publicDir = path.join(__dirname, 'public');
 
+const MARGIN_IN = 0.4;
+const formats = [
+  { file: 'public/resume.a4.pdf', format: 'A4', widthIn: 8.27, heightIn: 11.69 },
+  { file: 'public/resume.letter.pdf', format: 'Letter', widthIn: 8.5, heightIn: 11 }
+];
+
 const mimeFor = (ext) => {
   switch (ext.toLowerCase()) {
     case '.jpg':
@@ -34,63 +40,24 @@ const mimeFor = (ext) => {
   await page.emulateMediaType('screen');
 
   await page.goto(url, { waitUntil: 'networkidle0' });
+
   await page.addStyleTag({
-  content: `
-    .container, .container-lg, .container-xl, .container-xxl {
-      max-width: 100% !important;
-      width: 100% !important;
-    }
-    @media print and (max-height: 11in) {
-      body {
-        font-size: 0.85em;
-        line-height: 1.3 !important;
+    content: `
+      .container, .container-lg, .container-xl, .container-xxl {
+        max-width: 100% !important;
       }
-      h1, h2, h3, h4, h5, h6 {
-        margin: 0.3em 0 !important;
-      }
-      p, li {
-        margin: 0.2em 0 !important;
-      }
-      section, article, .section, .block {
-        margin-bottom: 0.5em !important;
-      }
-    .dark-mode-switch {
-      display: none !important;
-      visibility: hidden !important;
-      position: absolute !important;
-      width: 0 !important;
-      height: 0 !important;
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-    body, html {
-      width: 100% !important;
-      margin: 0 !important;
-      padding: 0 !important;
-    }
-    h1, h2, h3, h4, h5, h6 {
-      page-break-before: avoid !important;
-      page-break-after: avoid !important;
-      break-before: avoid !important;
-      break-after: avoid !important;
-    }
-    section, article, .section, .block {
-      page-break-inside: avoid !important;
-      break-inside: avoid !important;
-    }
-    p {
-      page-break-inside: avoid !important;
-      break-inside: avoid !important;
-    }
-  `
+    `
   });
-    await page.evaluate(() => {
+
+  // Remove the dark mode toggle entirely before printing
+  await page.evaluate(() => {
     document.querySelectorAll('.dark-mode-switch').forEach((el) => el.remove());
   });
+
+  // Inline images from disk so they always appear in the PDF
   const imgSrcs = await page.$$eval('img', (imgs) =>
     imgs.map((img) => img.getAttribute('src'))
   );
-  console.log('Found image src attributes:', imgSrcs);
 
   for (const src of imgSrcs) {
     if (!src) continue;
@@ -127,28 +94,41 @@ const mimeFor = (ext) => {
     }
   }
 
-  // Give the browser a moment to repaint with the new inline image data
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  // Ensure the public directory exists before writing files to prevent crash
-  if (!fs.existsSync(publicDir)){
-    fs.mkdirSync(publicDir, { recursive: true });
+  // Fit everything on ONE page: widen the layout until the content,
+  // scaled to the page width, is short enough to fit the page height
+  for (const f of formats) {
+    const printableW = (f.widthIn - 2 * MARGIN_IN) * 96;
+    const printableH = (f.heightIn - 2 * MARGIN_IN) * 96;
+    let scale = printableW / 900;
+
+    for (let w = 900; w <= 2400; w += 50) {
+      await page.setViewport({ width: w, height: 1000 });
+      const contentH = await page.evaluate(
+        () => document.documentElement.scrollHeight
+      );
+      scale = printableW / w;
+      if (contentH * scale <= printableH * 0.97) break;
+    }
+
+    scale = Math.min(Math.max(scale, 0.1), 2);
+    console.log(`${f.format}: using scale ${scale.toFixed(2)}`);
+
+    await page.pdf({
+      path: f.file,
+      format: f.format,
+      printBackground: true,
+      scale,
+      pageRanges: '1',
+      margin: {
+        top: `${MARGIN_IN}in`,
+        bottom: `${MARGIN_IN}in`,
+        left: `${MARGIN_IN}in`,
+        right: `${MARGIN_IN}in`
+      }
+    });
   }
-
-  // Use absolute paths instead of relative strings
-  await page.pdf({
-  path: path.join(publicDir, 'resume.a4.pdf'),
-  format: 'A4',
-  printBackground: true,
-  margin: { top: '0.4in', bottom: '0.4in', left: '0.4in', right: '0.4in' }
-});
-
-await page.pdf({
-  path: path.join(publicDir, 'resume.letter.pdf'),
-  format: 'Letter',
-  printBackground: true,
-  margin: { top: '0.25in', bottom: '0.25in', left: '0.35in', right: '0.35in' }
-});
 
   await browser.close();
   console.log('PDFs generated successfully');
