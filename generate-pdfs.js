@@ -84,6 +84,9 @@ const mimeFor = (ext) => {
     }
   `
   });
+    await page.evaluate(() => {
+    document.querySelectorAll('.dark-mode-switch').forEach((el) => el.remove());
+  });
   const imgSrcs = await page.$$eval('img', (imgs) =>
     imgs.map((img) => img.getAttribute('src'))
   );
